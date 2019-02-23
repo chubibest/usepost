@@ -9,12 +9,15 @@ const pool = new Pool(
 
 const addItem = (queryvalues) => {
   const query = {
-    text: 'insert into todo(item)  values $1 returning *',
+    // postgres returning error at or near $1  
+    text: 'insert into todo(item)  values ($1) returning *',
     values: [...queryvalues]
   };
   pool.connect().then(
-    Client => Client.query(query))
-    .then(res => Console.log(res), err => console.log(err));
+    client => client.query(query)
+  )
+    .then((res) => { console.log(res); client.release(); })
+    .catch(e => console.log(e); client.release());
 };
 
-addItem('poop');
+addItem(['pee']);
