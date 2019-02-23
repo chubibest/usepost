@@ -10,6 +10,8 @@ client.connect().then(()=>{console.log('connected')},(e)=>{console.log(e)})
 //     text : " INSERT INTO todo  (item, completed) values ($1,$2) returning *",
 //     values : ['die',false]
 // }
-const query = `SELECT COUNT(id) FROM todo WHERE  completed = true   `
-client.query(query).then((res)=>console.log(res.rows)).catch((e)=>console.log(e))
+// const query = `SELECT COUNT(id) FROM todo WHERE  completed = true `
+// const query =  ` delete from todo where id=6 returning *`
+const query = ` UPDATE todo  SET completed = true WHERE id = 7 RETURNING *`
+client.query(query).then((res)=>{console.log(res)}).catch((e)=>console.log(e))
 console.log('hmmn')
