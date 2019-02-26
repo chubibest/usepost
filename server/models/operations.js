@@ -44,7 +44,7 @@ const getItem = (item) => {
     text: 'SELECT * FROM todoes WHERE item = $1 ',
     values: [item]
   };
-  connect.then(client => client.query(query).then((res) => {
+  return connect.then(client => client.query(query).then((res) => {
     console.log(res);
     client.release();
     return res;
@@ -53,7 +53,7 @@ const getItem = (item) => {
     client.release();
   })).catch(e => console.log(e));
 };
-debugger;
+
 
 module.exports = {
   addItem,
