@@ -1,6 +1,6 @@
-const pool = require('../db/pg')
+const pool = require('../db/pg');
 
-const createUserTable = (Client) =>{
+const createUserTable = (Client) => {
   const query = `CREATE TABLE todoes (
      id serial primary key,
      item varchar(20) not null,

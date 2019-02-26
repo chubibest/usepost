@@ -6,14 +6,11 @@ const addItem = (queryvalues) => {
     text: 'insert into todoes(item)  values ($1) returning *',
     values: [queryvalues.text]
   };
- 
   return connect.then(
-    (client) => {
-      return client.query(query)
-        .then((res) => { console.log(res.rows); client.release(); return res.rows; }, (e) => {
-          console.log(e); client.release();
-        });
-    }
+    client => client.query(query)
+      .then((res) => { console.log(res.rows); client.release(); return res.rows; }, (e) => {
+        console.log(e); client.release();
+      })
   )
     .catch((e) => { console.log(e); });
 };
@@ -42,8 +39,25 @@ const removeItem = (item) => {
   ), e => console.log(e));
 };
 
+const getItem = (item) => {
+  const query = {
+    text: 'SELECT * FROM todoes WHERE item = $1 ',
+    values: [item]
+  };
+  connect.then(client => client.query(query).then((res) => {
+    console.log(res);
+    client.release();
+    return res;
+  }, (e) => {
+    console.log(e);
+    client.release();
+  })).catch(e => console.log(e));
+};
+debugger;
+
 module.exports = {
   addItem,
   checkItem,
-  removeItem
+  removeItem,
+  getItem
 };
