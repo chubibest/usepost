@@ -8,8 +8,8 @@ const addItem = (queryvalues) => {
   };
   return connect.then(
     client => client.query(query)
-      .then((res) => { console.log(res.rows); client.release(); return res.rows; }, (e) => {
-        console.log(e); client.release();
+      .then((res) => { console.log(res.rows); return res.rows[0]; }, (e) => {
+        console.log(e); 
       })
   )
     .catch((e) => { console.log(e); });
@@ -53,7 +53,6 @@ const getItem = (item) => {
     client.release();
   })).catch(e => console.log(e));
 };
-
 
 module.exports = {
   addItem,

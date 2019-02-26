@@ -1,4 +1,4 @@
-const { expect } = require('chai').expect;
+const { expect } = require('chai');
 const request = require('supertest');
 
 const app = require('../server');
@@ -13,14 +13,14 @@ describe('Post todos/', () => {
       .expect(200)
       .expect((resp) => {
         // this is wer d magic happens
-        expect(resp.body.text).to.equal(text);
+        expect(resp.body.item).to.equal(text);
       })
-      .end((err,res) => {
+      .end((err, resp) => {
         if (err) {
           return done(err);
         }
         operations.getItem('gadot').then((res) => {
-          expect(res.rows[0].item).to.equal(text);
+          expect(res.rows[0].item).to.equal(resp.body.item);
           done();
         }).catch(e => done(e));
       });
