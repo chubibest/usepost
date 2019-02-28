@@ -1,26 +1,26 @@
-import { query } from '../db/pg';
+import query from '../db/pg';
+import { addItemQuery } from '../utility/queryObjects'; // abstract the queries, neater
 
-const addItem = (queryvalues) => {
-  const queryText = {
+const addItem = (req, res) => {
+  const { text: item } = req.body;
 
-    text: 'insert into todoes(item)  values ($1) returning *',
-    values: [queryvalues.text]
-  };
-  query(queryText);
+  query(addItemQuery(item)).then((data) => {
+    res.status(201).send({
+      status: 'success',
+      data
+    });
+  }).catch(() => {
+    // if an error is thrown, you can then put the 'e' parameter and run console.log(e)
+    res.status(500).send({
+      status: 'error',
+      message: 'could not save your item'
+    });
+  });
 };
-// const checkItem = (item) => {
-//   const query = {
-//     text: 'update todoes set completed = true , completed_at = now() where item = $1 returning *',
-//     values: item
-//   };
-//   connect.then(client => client.query(query).then(
-//     (res) => {
-//       console.log(res.rows);
-//       client.release();
-//     }, () => client.release()
-//   )).catch((e) => {
-//     console.log(e);
-//   });
+
+// const checkItem = (req, res) => {
+//   const { item } = req.params;
+//   query((checkItemQuery(item)));
 // };
 
 // const removeItem = (item) => {

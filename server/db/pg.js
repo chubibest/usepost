@@ -1,16 +1,18 @@
 import { Pool } from 'pg';
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 
 dotenv.config();
-const pool = new Pool(
-  {
-    connectionString: process.env.DATABASE_URL
-  }
-);
 
-const query = queryText => pool.connect()
-  .then(client => client.query(queryText).then((res) => {
+const { DATABASE_URL: connectionString } = process.env;
+const pool = new Pool({ connectionString });
+
+const query = queryObj => pool.connect()
+  .then(client => client.query(queryObj).then((res) => {
     client.release();
     return res.rows;
-  }, () => client.release()));
+  }, (e) => {
+    client.release();
+    throw e;
+  }));
+
 export default query;

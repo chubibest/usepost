@@ -1,23 +1,18 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser')
+// express now has this funcitonality built in. see lines 11 and 12
 const {
   addItem,
-  checkItem,
-  removeItem,
-  getItem,
   getAll
 } = require('./models/operations');
 
 const app = express();
 
-app.use(bodyParser.json());
-app.post('/todos', (req, res) => {
-  // cant quite get addItem from userTablejs to return res.rows to  result please help 
-  addItem(req.body).then((resp) => {
-    res.send(resp);
-    console.log(resp, 'here it is');
-  });
-});
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.post('/todos', addItem); // addItem is now a middleware function
+
 app.get('/todos', (req, res) => {
   getAll().then(result => res.send(result));
 });
