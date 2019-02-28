@@ -8,4 +8,9 @@ const pool = new Pool(
   }
 );
 
-export default pool.connect();
+const query = queryText => pool.connect()
+  .then(client => client.query(queryText).then((res) => {
+    client.release();
+    return res.rows;
+  }, () => client.release()));
+export default query;

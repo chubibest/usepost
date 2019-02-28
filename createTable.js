@@ -18,7 +18,7 @@ const createUserTable = () => {
       completed_at timestamptz default null)`;
   connect.then(client => client.query(query).then((res) => {
     client.release();
-    console.log(res.rows);
+    console.log('this table was created', res);
   }, e => console.log(e)), e => console.log(e));
 };
 
@@ -26,6 +26,7 @@ const createUserTable = () => {
 const dropUserTable = () => {
   const queryText = 'DROP TABLE IF EXISTS todoes;';
   connect.then(client => client.query(queryText).then((res) => {
+    client.release();
     console.log('this is the result', res);
   }, e => console.log(e))).catch(e => console.log(e));
 };

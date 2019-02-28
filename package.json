@@ -7,7 +7,9 @@
     "test": "mocha server/**/*.test.js",
     "test-watch": "nodemon -x 'npm test'",
     "start": "nodemon -x 'babel-node server/server.js'",
-    "create-table": "babel-node server/models/createTable.js"
+    "create_table": "babel-node  createTable createUserTable",
+    "drop_table": "babel-node createTable dropUserTable",
+    "refresh_table": "npm run drop_table && npm run create_table "
   },
   "keywords": [],
   "author": "",

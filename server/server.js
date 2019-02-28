@@ -4,7 +4,8 @@ const {
   addItem,
   checkItem,
   removeItem,
-  getItem
+  getItem,
+  getAll
 } = require('./models/operations');
 
 const app = express();
@@ -17,6 +18,9 @@ app.post('/todos', (req, res) => {
     console.log(resp, 'here it is');
   });
 });
-app.listen(3000, () => console.log('connected to server'));
+app.get('/todos', (req, res) => {
+  getAll().then(result => res.send(result));
+});
+app.listen(3000, () => console.log('started server'));
 
 module.exports = app;
