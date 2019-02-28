@@ -1,12 +1,18 @@
-import { query } from '../db/pg';
+import query from '../db/pg';
+import * as addItemQuery from '../db/utils';
 
-const addItem = (queryvalues) => {
-  const queryText = {
-
-    text: 'insert into todoes(item)  values ($1) returning *',
-    values: [queryvalues.text]
-  };
-  query(queryText);
+const addItem = (req, res) => {
+  query(addItemQuery(req.body.text))
+    .then(res => res.status(201).send({
+      status: 'success',
+      res
+    })).catch((e) => {
+      res.status(500).send({
+        status: 'error',
+        message: 'server error'
+      });
+      throw e;
+    });
 };
 // const checkItem = (item) => {
 //   const query = {
