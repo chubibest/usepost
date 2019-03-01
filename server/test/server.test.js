@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { request } from 'supertest';
+import request from 'supertest';
 import app from '../server';
 import * as operations from '../models/operations';
 
@@ -7,14 +7,15 @@ console.log(operations);
 
 describe('Post todos/', () => {
   it('should create a new todo', (done) => {
-    const text = 'gadot';
+    const text = 'gad';
     request(app)
       .post('/todos')
       .send({ text })
-      .expect(200)
+      .expect(201)
       .expect((resp) => {
+        console.log(resp)
         // this is wer d magic happens
-        expect(resp.body.text).to.equal(text);
+        expect(resp).to.equal(text);
       })
       .end((err, resp) => {
         if (err) {
