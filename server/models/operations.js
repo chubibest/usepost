@@ -32,6 +32,9 @@ const getItem = (req, res) => {
   query(getItemQuery(req.params.item))
     .then((result) => {
       console.log(JSON.stringify(result));
+      //
+      // if staement being ignored
+      //
       if (result === []) {
         res.status(404).send({
           status: 'error',
