@@ -1,8 +1,9 @@
 import { expect } from 'chai';
 import { request } from 'supertest';
 import app from '../server';
+import * as operations from '../models/operations';
 
-const operations = require('../models/operations');
+console.log(operations);
 
 describe('Post todos/', () => {
   it('should create a new todo', (done) => {
@@ -13,7 +14,7 @@ describe('Post todos/', () => {
       .expect(200)
       .expect((resp) => {
         // this is wer d magic happens
-        expect(resp.body.item).to.equal(text);
+        expect(resp.body.text).to.equal(text);
       })
       .end((err, resp) => {
         if (err) {
@@ -26,3 +27,5 @@ describe('Post todos/', () => {
       });
   });
 });
+
+

@@ -10,3 +10,10 @@ export const getItemQuery = item => ({
   text: 'SELECT * FROM todoes WHERE item = $1 ',
   values: [item]
 });
+// export const removeItemQuery = item => ({
+//   text: 'DELETE FROM todoes WHERE item = $1 returning * ',
+//   values: [item]
+// });
+export const getAllQuery = () => ({
+  text: 'SELECT * FROM todoes'
+});

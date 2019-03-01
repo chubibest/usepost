@@ -1,5 +1,11 @@
 import query from '../db/pg';
-import { addItemQuery, checkItemQuery, getItemQuery } from '../db/utils';
+import {
+  addItemQuery,
+  // checkItemQuery,
+  getItemQuery,
+  // removeItemQuery
+  getAllQuery
+} from '../db/utils';
 
 const addItem = (req, res) => {
   query(addItemQuery(req.body.text))
@@ -14,19 +20,19 @@ const addItem = (req, res) => {
       throw e;
     });
 };
-const checkItem = (req, res) => {
-  query(checkItemQuery(req.body.text))
-    .then(result => res.status(205).send({
-      status: 'updated',
-      result: result[0]
-    })).catch((e) => {
-      res.status(404).send({
-        status: 'error',
-        message: 'could not update item'
-      });
-      throw e;
-    });
-};
+// const checkItem = (req, res) => {
+//   query(checkItemQuery(req.body.text))
+//     .then(result => res.status(205).send({
+//       status: 'updated',
+//       result: result[0]
+//     })).catch((e) => {
+//       res.status(404).send({
+//         status: 'error',
+//         message: 'could not update item'
+//       });
+//       throw e;
+//     });
+// };
 
 const getItem = (req, res) => {
   query(getItemQuery(req.params.item))
@@ -35,7 +41,7 @@ const getItem = (req, res) => {
       //
       // if staement being ignored
       //
-      if (result === []) {
+      if (result[0] === undefined) {
         res.status(404).send({
           status: 'error',
           message: 'Item not found'
@@ -56,11 +62,8 @@ const getItem = (req, res) => {
     });
 };
 
-// const removeItem = (item) => {
-//   const query = {
-//     text: 'DELETE FROM todoes WHERE item = $1 returning * ',
-//     values: [item]
-//   };
+// const removeItem = (req, res) => {
+//   query(removeItemQuery())
 //   .then(result => res.status(205).send({
 //   status: 'success',
 //   result: result[0]
@@ -73,22 +76,22 @@ const getItem = (req, res) => {
 // });
 // };
 
-// const getAll = () => {
-//   const query = {
-//     text: 'SELECT * FROM todoes'
-//   };
-//   return connect.then(client => client.query(query).then((res) => {
-//     console.log('results from getALl', res);
-//     client.release();
-//     return res;
-//   }, (e) => {
-//     console.log(e);
-//     client.release();
-//   })).catch(e => console.log(e));
-// };
+const getAll = (req, res) => {
+  query(getAllQuery()).then(result => res.status(200).send({
+    status: 'success',
+    result
+  })).catch((e) => {
+    res.status(500).send({
+      status: 'error',
+      e
+    });
+  });
+};
 
 export {
   addItem,
-  checkItem,
-  getItem
+  // checkItem,
+  getItem,
+  // removeItem
+  getAll
 };
