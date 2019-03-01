@@ -1,21 +1,19 @@
-const express = require('express');
-const {
+import express from 'express';
+import {
   addItem,
   checkItem,
-  removeItem,
-  getItem,
-  getAll
-} = require('./models/operations');
+  getItem
+} from './models/operations';
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.post('/todos', addItem);
+app.get('/todos', checkItem);
+app.get('/todos/:item', getItem);
 
-app.get('/todos', (req, res) => {
-  getAll().then(result => res.send(result));
-});
-app.listen(3000, () => console.log('started server'));
+app.listen(3003, () => console.log('started server'));
 
-module.exports = app;
+export default app;

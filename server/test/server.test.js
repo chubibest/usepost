@@ -1,7 +1,7 @@
-const { expect } = require('chai');
-const request = require('supertest');
+import { expect } from 'chai';
+import { request } from 'supertest';
+import app from '../server';
 
-const app = require('../server');
 const operations = require('../models/operations');
 
 describe('Post todos/', () => {

@@ -1,11 +1,11 @@
 import query from '../db/pg';
-import * as addItemQuery from '../db/utils';
+import { addItemQuery, checkItemQuery, getItemQuery } from '../db/utils';
 
 const addItem = (req, res) => {
   query(addItemQuery(req.body.text))
-    .then(res => res.status(201).send({
+    .then(result => res.status(201).send({
       status: 'success',
-      res
+      result
     })).catch((e) => {
       res.status(500).send({
         status: 'error',
@@ -14,44 +14,60 @@ const addItem = (req, res) => {
       throw e;
     });
 };
-// const checkItem = (item) => {
-//   const query = {
-//     text: 'update todoes set completed = true , completed_at = now() where item = $1 returning *',
-//     values: item
-//   };
-//   connect.then(client => client.query(query).then(
-//     (res) => {
-//       console.log(res.rows);
-//       client.release();
-//     }, () => client.release()
-//   )).catch((e) => {
-//     console.log(e);
-//   });
-// };
+const checkItem = (req, res) => {
+  query(checkItemQuery(req.body.text))
+    .then(result => res.status(205).send({
+      status: 'updated',
+      result: result[0]
+    })).catch((e) => {
+      res.status(404).send({
+        status: 'error',
+        message: 'could not update item'
+      });
+      throw e;
+    });
+};
+
+const getItem = (req, res) => {
+  query(getItemQuery(req.params.item))
+    .then((result) => {
+      console.log(JSON.stringify(result));
+      if (result === []) {
+        res.status(404).send({
+          status: 'error',
+          message: 'Item not found'
+        });
+        return;
+      }
+      res.status(200).send({
+        status: 'success',
+        yay: 'yay',
+        result
+      });
+    }).catch((e) => {
+      res.status(500).send({
+        status: 'error',
+        message: 'could not fetch item'
+      });
+      throw e;
+    });
+};
 
 // const removeItem = (item) => {
 //   const query = {
-//     text: 'DELETE FROM todoes WHERE item = $1 returning *',
-//     values: item
-//   };
-//   connect.then(client => client.query(query).then(
-//     (res) => { console.log(res); client.release(); }, () => client.release()
-//   ), e => console.log(e));
-// };
-
-// const getItem = (item) => {
-//   const query = {
-//     text: 'SELECT * FROM todoes WHERE item = $1 ',
+//     text: 'DELETE FROM todoes WHERE item = $1 returning * ',
 //     values: [item]
 //   };
-//   return connect.then(client => client.query(query).then((res) => {
-//     console.log(res);
-//     client.release();
-//     return res;
-//   }, (e) => {
-//     console.log(e);
-//     client.release();
-//   })).catch(e => console.log(e));
+//   .then(result => res.status(205).send({
+//   status: 'success',
+//   result: result[0]
+// })).catch((e) => {
+//   res.send({
+//     status: 'error',
+//     message: 'could not delete item'
+//   });
+//   throw e;
+// });
 // };
 
 // const getAll = () => {
@@ -68,10 +84,8 @@ const addItem = (req, res) => {
 //   })).catch(e => console.log(e));
 // };
 
-module.exports = {
+export {
   addItem,
-  // checkItem,
-  // removeItem,
-  // getItem,
-  // getAll
+  checkItem,
+  getItem
 };
