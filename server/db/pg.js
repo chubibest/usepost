@@ -11,7 +11,6 @@ const pool = new Pool(
 const query = queryObj => pool.connect()
   .then(client => client.query(queryObj).then((res) => {
     client.release();
-    console.log(JSON.stringify(res.rows));
     return res.rows;
   }, (e) => {
     console.log(e);

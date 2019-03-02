@@ -10,10 +10,10 @@ chai.use(chaiHttp);
 
 describe('Post todos/', () => {
   const text = 'gadot';
-  before(() => {
+  before((done) => {
     query(queries.removeItemQuery(text))
-      .then(result => console.log('this item was deleted before test ran', result))
-      .catch(e => console.log('database error', e));
+      .then(() => done())
+      .catch(e => done(e));
   });
   it('should create a new todo', (done) => {
     chai.request(app)

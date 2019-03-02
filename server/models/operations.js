@@ -8,7 +8,22 @@ import {
 } from '../db/utils';
 
 const addItem = (req, res) => {
-  query(addItemQuery(req.body.text))
+  const userInput = req.body.text;
+  console.log(userInput);
+  const trimmed = userInput.trim();
+  if (!userInput) {
+    return res.status(400).send({
+      status: 'bad request',
+      message: 'please send correct input'
+    });
+  }
+  if (trimmed.length < 1) {
+    return res.status(403).send({
+      status: 'Forbidden!',
+      message: 'please send correct input'
+    });
+  }
+  query(addItemQuery(userInput))
     .then(result => res.status(201).send({
       status: 'success',
       result
