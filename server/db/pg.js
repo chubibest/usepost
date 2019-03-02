@@ -13,7 +13,6 @@ const query = queryObj => pool.connect()
     client.release();
     return res.rows;
   }, (e) => {
-    console.log(e);
     client.release();
     return e;
   }));

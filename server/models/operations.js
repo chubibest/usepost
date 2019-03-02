@@ -9,14 +9,14 @@ import {
 
 const addItem = (req, res) => {
   const userInput = req.body.text;
-  console.log(userInput);
-  const trimmed = userInput.trim();
   if (!userInput) {
     return res.status(400).send({
       status: 'bad request',
       message: 'please send correct input'
     });
   }
+  const trimmed = userInput.trim();
+
   if (trimmed.length < 1) {
     return res.status(403).send({
       status: 'Forbidden!',
