@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --require @babel/register server/**/*.test.js",
+    "test": "nyc mocha --require @babel/register server/**/*.test.js",
     "test-watch": "nodemon -x 'npm test'",
     "start": "nodemon -x 'babel-node server/server.js'",
     "create_table": "babel-node  createTable createUserTable",
@@ -33,6 +33,7 @@
     "eslint-plugin-import": "^2.16.0",
     "mocha": "^6.0.1",
     "nodemon": "^1.18.10",
+    "nyc": "^13.3.0",
     "supertest": "^3.4.2"
   }
 }
