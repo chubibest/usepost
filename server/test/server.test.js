@@ -1,32 +1,31 @@
-import { expect } from 'chai';
-import request from 'supertest';
+import chai from 'chai';
+import chaiHttp from 'chai-http';
 import app from '../server';
-import * as operations from '../models/operations';
+import query from '../db/pg';
+import * as queries from '../db/utils';
 
-console.log(operations);
+const { expect } = chai;
+chai.use(chaiHttp);
+
 
 describe('Post todos/', () => {
+  const text = 'gadot';
+  before(() => {
+    query(queries.removeItemQuery(text))
+      .then(result => console.log('this item was deleted before test ran', result))
+      .catch(e => console.log('database error', e));
+  });
   it('should create a new todo', (done) => {
-    const text = 'gad';
-    request(app)
+    chai.request(app)
       .post('/todos')
       .send({ text })
-      .expect(201)
-      .expect((resp) => {
-        console.log(resp)
-        // this is wer d magic happens
-        expect(resp).to.equal(text);
-      })
       .end((err, resp) => {
         if (err) {
           return done(err);
         }
-        operations.getItem('gadot').then((res) => {
-          expect(res.rows[0].item).to.equal(resp.body.item);
-          done();
-        }).catch(e => done(e));
+        expect(resp).to.have.status(201);
+        expect(resp.body.result[0].item).to.equal(text);
+        done();
       });
   });
 });
-
-
