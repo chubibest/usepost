@@ -1,10 +1,10 @@
 import query from '../db/pg';
 import {
   addItemQuery,
+  getAllQuery,
   // checkItemQuery,
-  getItemQuery,
+  getItemQuery
   // removeItemQuery
-  getAllQuery
 } from '../db/utils';
 
 const addItem = (req, res) => {
@@ -26,12 +26,12 @@ const addItem = (req, res) => {
   query(addItemQuery(userInput))
     .then((result) => {
       if (result.name === 'error') {
-        res.status(409).send({
+        return res.status(409).send({
           status: 'error',
           message: 'item already exist'
         });
       }
-      res.status(201).send({
+      return res.status(201).send({
         status: 'success',
         result
       });
@@ -43,20 +43,18 @@ const addItem = (req, res) => {
       return e;
     });
 };
-// const checkItem = (req, res) => {
-//   query(checkItemQuery(req.body.text))
-//     .then(result => res.status(205).send({
-//       status: 'updated',
-//       result: result[0]
-//     })).catch((e) => {
-//       res.status(404).send({
-//         status: 'error',
-//         message: 'could not update item'
-//       });
-//       throw e;
-//     });
-// };
-
+const getAll = (req, res) => {
+  query(getAllQuery()).then(result => res.status(200).send({
+    status: 'success',
+    getAll: 'from get all',
+    result
+  })).catch((e) => {
+    res.status(500).send({
+      status: 'error',
+      e
+    });
+  });
+};
 const getItem = (req, res) => {
   query(getItemQuery(req.params.item))
     .then((result) => {
@@ -65,11 +63,11 @@ const getItem = (req, res) => {
       // if staement being ignored
       //
       if (result[0] === undefined) {
-        res.status(404).send({
+        return res.status(404).send({
           status: 'error',
-          message: 'Item not found'
+          message: 'Item not found',
+          sender: 'getItem'
         });
-        return;
       }
       res.status(200).send({
         status: 'success',
@@ -85,6 +83,22 @@ const getItem = (req, res) => {
     });
 };
 
+
+// const checkItem = (req, res) => {
+//   query(checkItemQuery(req.body.text))
+//     .then(result => res.status(205).send({
+//       status: 'updated',
+//       result: result[0]
+//     })).catch((e) => {
+//       res.status(404).send({
+//         status: 'error',
+//         message: 'could not update item'
+//       });
+//       throw e;
+//     });
+// };
+
+
 // const removeItem = (req, res) => {
 //   query(removeItemQuery())
 //   .then(result => res.status(205).send({
@@ -99,17 +113,6 @@ const getItem = (req, res) => {
 // });
 // };
 
-const getAll = (req, res) => {
-  query(getAllQuery()).then(result => res.status(200).send({
-    status: 'success',
-    result
-  })).catch((e) => {
-    res.status(500).send({
-      status: 'error',
-      e
-    });
-  });
-};
 
 export {
   addItem,

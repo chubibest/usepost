@@ -64,7 +64,7 @@ describe('Post todos/', () => {
       });
   });
   it('should trigger an error when data is inputed twice', (done) => {
-    const text = 'gado';
+    const text = 'gadot';
     chai.request(app)
       .post('/todos')
       .send({ text })
@@ -73,7 +73,35 @@ describe('Post todos/', () => {
           console.log('THIS IS FROM TESTS', err);
           return done(err);
         }
-        expect(resp.body.text).to.equal();
+        expect(resp).to.have.status(409);
+        expect(resp.error.text).to.equal('{"status":"error","message":"item already exist"}');
+        done();
+      });
+  });
+});
+describe('GETALL TODOS', () => {
+  it('should get all todos', (done) => {
+    chai.request(app)
+      .get('/todos')
+      .end((err, resp) => {
+        if (err) {
+          return done(err);
+        }
+        expect(resp).to.have.status(200);
+        done();
+      });
+  });
+});
+describe('GET TODO', () => {
+  it('should return a 404 for bad input', (done) => {
+    chai.request(app)
+      .get('todos/nonsense')
+      .end((err, resp) => {
+        if (err) {
+          return done(err);
+        }
+        console.log('THIS IS THE TEST RESULT');
+        expect(resp).to.have.status(404);
         done();
       });
   });

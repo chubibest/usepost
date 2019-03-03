@@ -16,6 +16,6 @@ const query = queryObj => pool.connect()
     client.release();
     return e;
   }))
-  .catch(e => e);
+ 
 
 export default query;

@@ -18,3 +18,4 @@ app.get('/todos/:item', getItem);
 app.listen(3000, () => console.log('started server'));
 
 export default app;
+// http://localhost:3000/todos?nonsense
