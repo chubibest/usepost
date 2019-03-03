@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha --require @babel/register server/**/*.test.js",
+    "test": "nyc mocha --require @babel/register server/**/*.test.js --exit",
     "test-watch": "nodemon -x 'npm test'",
     "start": "nodemon -x 'babel-node server/server.js'",
     "create_table": "babel-node  createTable createUserTable",

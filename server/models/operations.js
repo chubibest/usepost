@@ -9,7 +9,7 @@ import {
 
 const addItem = (req, res) => {
   const userInput = req.body.text;
-  if (!userInput) {
+  if (!req.body.text) {
     return res.status(400).send({
       status: 'bad request',
       message: 'please send correct input'
@@ -24,15 +24,23 @@ const addItem = (req, res) => {
     });
   }
   query(addItemQuery(userInput))
-    .then(result => res.status(201).send({
-      status: 'success',
-      result
-    })).catch((e) => {
+    .then((result) => {
+      if (result.name === 'error') {
+        res.status(409).send({
+          status: 'error',
+          message: 'item already exist'
+        });
+      }
+      res.status(201).send({
+        status: 'success',
+        result
+      });
+    }).catch((e) => {
       res.status(500).send({
         status: 'error',
         message: 'server error'
       });
-      throw e;
+      return e;
     });
 };
 // const checkItem = (req, res) => {
