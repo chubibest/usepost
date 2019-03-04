@@ -6,8 +6,7 @@
   "scripts": {
     "test": "nyc mocha --require @babel/register server/**/*.test.js --exit",
     "test-watch": "nodemon -x 'npm test'",
-    "start": "babel-node server/server.js",
-    "start-dev": "nodemon -x 'babel-node server/server.js'",
+    "start": "nodemon -x 'babel-node server/server.js'",
     "create_table": "babel-node  createTable createUserTable",
     "drop_table": "babel-node createTable dropUserTable",
     "refresh_table": "npm run drop_table && npm run create_table "

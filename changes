@@ -1,6 +1,6 @@
 created a dynamic port variable on server.js line 18 and 20;
-changed former start script to start dev;
-created a new start script to run on heroku;
 set node version in engines object of package.json;
 
-NB: not sure how the code will get transpiled now.
+how would i run the npm create-table script from heroku
+
+
