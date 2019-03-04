@@ -40,7 +40,7 @@ describe('Post todos/', () => {
         }
         expect(resp).to.have.status(400);
         if (resp.error) {
-          expect(resp.error.text).to.equal('{"status":"bad request","message":"please send correct input"}')
+          expect(resp.error.text).to.equal('{"status":"bad request","message":"please send correct input"}');
           return done();
         }
         done();
@@ -95,12 +95,12 @@ describe('GETALL TODOS', () => {
 describe('GET TODO', () => {
   it('should return a 404 for bad input', (done) => {
     chai.request(app)
-      .get('todos/nonsense')
+      .get('/todos/nonsense')
       .end((err, resp) => {
         if (err) {
           return done(err);
         }
-        console.log('THIS IS THE TEST RESULT');
+        console.log('THIS IS THE TEST RESULT', resp);
         expect(resp).to.have.status(404);
         done();
       });

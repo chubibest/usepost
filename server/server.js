@@ -15,7 +15,7 @@ app.post('/todos', addItem);
 app.get('/todos', getAll);
 app.get('/todos/:item', getItem);
 
-app.listen(3000, () => console.log('started server'));
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`listening on port ${port}`));
 
 export default app;
-// http://localhost:3000/todos?nonsense

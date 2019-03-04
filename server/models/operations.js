@@ -59,9 +59,6 @@ const getItem = (req, res) => {
   query(getItemQuery(req.params.item))
     .then((result) => {
       console.log(JSON.stringify(result));
-      //
-      // if staement being ignored
-      //
       if (result[0] === undefined) {
         return res.status(404).send({
           status: 'error',
@@ -69,7 +66,7 @@ const getItem = (req, res) => {
           sender: 'getItem'
         });
       }
-      res.status(200).send({
+      return res.status(200).send({
         status: 'success',
         yay: 'yay',
         result
@@ -79,7 +76,7 @@ const getItem = (req, res) => {
         status: 'error',
         message: 'could not fetch item'
       });
-      throw e;
+      return e;
     });
 };
 
