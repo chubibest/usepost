@@ -4,5 +4,3 @@ created a new start script to run on heroku;
 set node version in engines object of package.json;
 
 NB: not sure how the code will get transpiled now.
-My heroku cli doesn't have a login and i can't create from there
-either
