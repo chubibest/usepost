@@ -4,9 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "babel server -d dist",
+    "heroku-postbuild": "npm run refresh_table && npm run build",
+    "start": "node dist/server.js",
     "test": "nyc mocha --require @babel/register server/**/*.test.js --exit",
     "test-watch": "nodemon -x 'npm test'",
-    "start": "nodemon -x 'babel-node server/server.js'",
+    "start": "node server/server.js",
+    "start-dev": "nodemon -x 'babel-node server/server.js'",
     "create_table": "babel-node  createTable createUserTable",
     "drop_table": "babel-node createTable dropUserTable",
     "refresh_table": "npm run drop_table && npm run create_table "
