@@ -2,9 +2,9 @@ import query from '../db/pg';
 import {
   addItemQuery,
   getAllQuery,
-  // checkItemQuery,
-  getItemQuery
-  // removeItemQuery
+  checkItemQuery,
+  getItemQuery,
+  removeItemQuery
 } from '../db/utils';
 
 const addItem = (req, res) => {
@@ -44,11 +44,19 @@ const addItem = (req, res) => {
     });
 };
 const getAll = (req, res) => {
-  query(getAllQuery()).then(result => res.status(200).send({
-    status: 'success',
-    getAll: 'from get all',
-    result
-  })).catch((e) => {
+  query(getAllQuery()).then((result) => {
+    if (!result[0]) {
+      return res.status(200).send({
+        status: 'error',
+        messayge: 'No todos to display'
+      });
+    }
+    res.status(200).send({
+      status: 'success',
+      getAll: 'from get all',
+      result
+    });
+  }).catch((e) => {
     res.status(500).send({
       status: 'error',
       e
@@ -58,7 +66,6 @@ const getAll = (req, res) => {
 const getItem = (req, res) => {
   query(getItemQuery(req.params.item))
     .then((result) => {
-      console.log(JSON.stringify(result));
       if (result[0] === undefined) {
         return res.status(404).send({
           status: 'error',
@@ -81,40 +88,58 @@ const getItem = (req, res) => {
 };
 
 
-// const checkItem = (req, res) => {
-//   query(checkItemQuery(req.body.text))
-//     .then(result => res.status(205).send({
-//       status: 'updated',
-//       result: result[0]
-//     })).catch((e) => {
-//       res.status(404).send({
-//         status: 'error',
-//         message: 'could not update item'
-//       });
-//       throw e;
-//     });
-// };
+const checkItem = (req, res) => {
+  query(checkItemQuery(req.params.item))
+    .then((result) => {
+      if (!result[0]) {
+        return res.status(404).send({
+          status: 'error',
+          message: 'Item not found'
+        });
+      }
+      res.status(205).send({
+        status: 'updated',
+        result
+      });
+    }).catch((e) => {
+      res.status(500).send({
+        status: 'error',
+        message: 'could not update item'
+      });
+      throw e;
+    });
+};
 
 
-// const removeItem = (req, res) => {
-//   query(removeItemQuery())
-//   .then(result => res.status(205).send({
-//   status: 'success',
-//   result: result[0]
-// })).catch((e) => {
-//   res.send({
-//     status: 'error',
-//     message: 'could not delete item'
-//   });
-//   throw e;
-// });
-// };
+const removeItem = (req, res) => {
+  const parameter = req.params.item;
+  query(removeItemQuery(parameter))
+    .then((result) => {
+      if (!result[0]) {
+        return res.status(404).send({
+          status: 'error',
+          error: 'item not found',
+          from: 'delete query'
+        });
+      }
+      res.status(205).send({
+        status: 'success',
+        parameter: 'Deleted'
+      });
+    }).catch((e) => {
+      res.status(204).send({
+        status: 'error',
+        message: 'could not delete item'
+      });
+      throw e;
+    });
+};
 
 
 export {
   addItem,
-  // checkItem,
+  checkItem,
   getItem,
-  // removeItem
+  removeItem,
   getAll
 };

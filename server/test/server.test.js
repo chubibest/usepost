@@ -70,7 +70,6 @@ describe('Post todos/', () => {
       .send({ text })
       .end((err, resp) => {
         if (err) {
-          console.log('THIS IS FROM TESTS', err);
           return done(err);
         }
         expect(resp).to.have.status(409);
@@ -100,8 +99,59 @@ describe('GET TODO', () => {
         if (err) {
           return done(err);
         }
-        console.log('THIS IS THE TEST RESULT', resp);
+        expect(resp.text).to.equal('{"status":"error","message":"Item not found","sender":"getItem"}');
         expect(resp).to.have.status(404);
+        done();
+      });
+  });
+});
+// describe('UPDATE ITEM', () => {
+//   it('should update ', (done) => {
+//     chai.request(app)
+//       .patch('/todos/gadot')
+//       .end((err, resp) => {
+//         if (err) {
+//           return done(err);
+//         }
+//         expect(resp.status).to.equal(205);
+//         expect(resp.text).to.equal();
+//       });
+//   });
+// });
+describe('DELETE TODOS', () => {
+  it('should delete a todo', (done) => {
+    chai.request(app)
+      .delete('/todos/gadot')
+      .end((err, resp) => {
+        if (err) {
+          return done(err);
+        }
+        expect(resp.status).to.equal(205);
+        expect(resp.text).to.equal('{"status":"success","parameter":"Deleted"}');
+        done();
+      });
+  });
+  it("should'nt delete a todo twice", (done) => {
+    chai.request(app)
+      .delete('/todos/gadot')
+      .end((err, resp) => {
+        if (err) {
+          return done(err);
+        }
+        expect(resp.status).to.equal(404);
+        expect(resp.text).to.equal('{"status":"error","error":"item not found","from":"delete query"}');
+        done();
+      });
+  });
+  it('should return a 404 for bad input', (done) => {
+    chai.request(app)
+      .delete('/todos/gadot')
+      .end((err, resp) => {
+        if (err) {
+          return done(err);
+        }
+        expect(resp.status).to.equal(404);
+        expect(resp.text).to.equal('{"status":"error","error":"item not found","from":"delete query"}');
         done();
       });
   });
