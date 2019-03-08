@@ -13,6 +13,13 @@ before_script:
   - psql -c 'create user emeka with superuser createdb createrole;' -U postgres
   - psql -c 'create database travesty;' -U postgres
   - psql -c 'GRANT ALL PRIVILEGES ON DATABASE travesty TO emeka;' -U postgres
+  - psql -c 'CREATE TABLE IF NOT EXISTS todoes (
+     id serial primary key,
+     item varchar(20) not null unique,
+     created_at timestamptz not null default now(),
+     completed boolean default false, 
+      completed_at timestamptz default null);' -U postgres
+  
 script:
   - npm test
 after_success:
