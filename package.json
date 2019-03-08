@@ -8,7 +8,7 @@
     "heroku-postbuild": "npm run refresh_table && npm run build",
     "start": "node dist/server.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "test": "nyc mocha --require @babel/register server/**/*.test.js --exit",
+    "test": "npm run create_table && nyc mocha --require @babel/register server/**/*.test.js --exit",
     "test-watch": "nodemon -x 'npm test'",
     "start-dev": "nodemon -x 'babel-node server/server.js'",
     "create_table": "babel-node  createTable createUserTable",
