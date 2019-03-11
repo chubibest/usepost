@@ -4,47 +4,77 @@ import {
   getAllQuery,
   checkItemQuery,
   getItemQuery,
-  removeItemQuery
+  removeItemQuery,
+  statusQuery
 } from '../db/utils';
 
-const addItem = (req, res) => {
-  const userInput = req.body.text;
+const addItem = async (req, res) => {
   if (!req.body.text) {
     return res.status(400).send({
       status: 'bad request',
       message: 'please send correct input'
     });
   }
-  const trimmed = userInput.trim();
-
-  if (trimmed.length < 1) {
+  if (req.body.text.trim().length < 1) {
     return res.status(403).send({
       status: 'Forbidden!',
       message: 'please send correct input'
     });
   }
-  query(addItemQuery(userInput))
-    .then((result) => {
-      if (result.name === 'error') {
-        return res.status(409).send({
-          status: 'error',
-          message: 'item already exist'
-        });
-      }
-      return res.status(201).send({
-        status: 'success',
-        result
-      });
-    }).catch((e) => {
-      res.status(500).send({
-        status: 'error',
-        message: 'server error'
-      });
-      return e;
+  try {
+    const result = await query(addItemQuery(req.body.text));
+    return res.status(201).send({
+      status: 'success',
+      result
     });
+  } catch (e) {
+    if (e.name === 'error') {
+      return res.status(409).send({
+        status: 'error',
+        message: 'item already exist'
+      });
+    }
+    res.status(500).send({
+      status: 'error',
+      message: 'server error'
+    });
+  }
 };
-const getAll = (req, res) => {
-  query(getAllQuery()).then((result) => {
+const getAll = async (req, res) => {
+  if (req.query.completed) {
+    const result = await query(statusQuery(req.query.completed));
+    switch (req.query.completed) {
+      case ('true'):
+        if (!result[0]) {
+          return res.status(200).send({
+            status: 'error',
+            messayge: 'No completed todoes'
+          });
+        }
+        res.status(200).send({
+          status: 'success',
+          completedtodoes: result
+        });
+        break;
+      case ('false'):
+        if (!result[0]) {
+          return res.status(200).send({
+            status: 'error',
+            messayge: 'No uncompleted todoes'
+          });
+        }
+        res.status(200).send({
+          status: 'success',
+          unfinishedtodoes: result
+        });
+        break;
+      default:
+        break;
+    }
+    return;
+  }
+  try {
+    const result = await query(getAllQuery());
     if (!result[0]) {
       return res.status(200).send({
         status: 'error',
@@ -56,85 +86,80 @@ const getAll = (req, res) => {
       getAll: 'from get all',
       result
     });
-  }).catch((e) => {
+  } catch (e) {
     res.status(500).send({
       status: 'error',
       e
     });
-  });
+  }
 };
-const getItem = (req, res) => {
-  query(getItemQuery(req.params.item))
-    .then((result) => {
-      if (result[0] === undefined) {
-        return res.status(404).send({
-          status: 'error',
-          message: 'Item not found',
-          sender: 'getItem'
-        });
-      }
-      return res.status(200).send({
-        status: 'success',
-        yay: 'yay',
-        result
-      });
-    }).catch((e) => {
-      res.status(500).send({
+const getItem = async (req, res) => {
+  try {
+    const result = await query(getItemQuery(req.params.item));
+    if (result[0] === undefined) {
+      return res.status(404).send({
         status: 'error',
-        message: 'could not fetch item'
+        message: 'Item not found',
+        sender: 'getItem'
       });
-      return e;
+    }
+    return res.status(200).send({
+      status: 'success',
+      yay: 'yay',
+      result
     });
+  } catch (e) {
+    res.status(500).send({
+      status: 'error',
+      message: 'could not fetch item'
+    });
+    return e;
+  }
 };
 
 
-const checkItem = (req, res) => {
-  query(checkItemQuery(req.params.item))
-    .then((result) => {
-      if (!result[0]) {
-        return res.status(404).send({
-          status: 'error',
-          message: 'Item not found'
-        });
-      }
-      res.status(205).send({
-        status: 'updated',
-        result
-      });
-    }).catch((e) => {
-      res.status(500).send({
+const checkItem = async (req, res) => {
+  try {
+    const result = await query(checkItemQuery(req.params.item));
+    if (!result[0]) {
+      return res.status(404).send({
         status: 'error',
-        message: 'could not update item'
+        message: 'Item not found'
       });
-      throw e;
+    }
+    res.status(205).send({
+      status: 'updated',
+      result
     });
+  } catch (e) {
+    res.status(500).send({
+      status: 'error',
+      message: 'could not update item'
+    });
+  }
 };
 
-
-const removeItem = (req, res) => {
+const removeItem = async (req, res) => {
   const parameter = req.params.item;
-  query(removeItemQuery(parameter))
-    .then((result) => {
-      if (!result[0]) {
-        return res.status(404).send({
-          status: 'error',
-          error: 'item not found',
-          from: 'delete query'
-        });
-      }
-      res.status(205).send({
-        status: 'success',
-        parameter: 'Deleted'
-      });
-    }).catch((e) => {
-      res.status(204).send({
+  try {
+    const result = await query(removeItemQuery(parameter));
+    if (!result[0]) {
+      return res.status(404).send({
         status: 'error',
-        message: 'could not delete item'
+        error: 'item not found',
       });
-      throw e;
+    }
+    res.status(205).send({
+      status: 'success',
+      message: 'Item Deleted'
     });
+  } catch (e) {
+    res.status(500).send({
+      status: 'error',
+      message: 'could not delete item'
+    });
+  }
 };
-
 
 export {
   addItem,

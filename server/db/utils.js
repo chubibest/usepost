@@ -17,3 +17,7 @@ export const removeItemQuery = item => ({
   text: 'DELETE FROM todoes WHERE item = $1 returning * ',
   values: [item]
 });
+export const statusQuery = item => ({
+  text: 'SELECT * FROM todoes WHERE completed = $1',
+  values: [item]
+});

@@ -7,13 +7,14 @@ const pool = new Pool(
     connectionString: process.env.DATABASE_URL
   }
 );
-
-const query = queryObj => pool.connect()
-  .then(client => client.query(queryObj).then((res) => {
+const query = async (queryObj) => {
+  let client;
+  try {
+    client = await pool.connect();
+    const result = await client.query(queryObj);
+    return result.rows;
+  } finally {
     client.release();
-    return res.rows;
-  }, (e) => {
-    client.release();
-    return e;
-  }));
+  }
+};
 export default query;
