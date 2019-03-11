@@ -45,13 +45,13 @@ describe('Post todos/', () => {
     }
   });
   it('should trigger an error when data is inputed twice', async () => {
-    const text = ' gadot';
+    const text = 'gadot';
     const resp = await chai.request(app)
       .post('/todos')
       .send({ text });
-    console.log(resp.status)
+    console.log(resp.status);
     expect(resp.status).to.equal(409);
-    expect(resp.error.text).to.equal('{"status":"error","message":"item already exist"}'); 
+    expect(resp.error.text).to.equal('{"status":"error","message":"item already exist"}');
   });
 });
 describe('GETALL TODOS', () => {
