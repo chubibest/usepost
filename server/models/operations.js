@@ -40,39 +40,40 @@ const addItem = async (req, res) => {
     });
   }
 };
-const getAll = async (req, res) => {
-  if (req.query.completed) {
+const getAllCompleted = async (req, res, next) => {
+  if (req.query.completed === 'true') {
     const result = await query(statusQuery(req.query.completed));
-    switch (req.query.completed) {
-      case ('true'):
-        if (!result[0]) {
-          return res.status(200).send({
-            status: 'error',
-            messayge: 'No completed todoes'
-          });
-        }
-        res.status(200).send({
-          status: 'success',
-          completedtodoes: result
-        });
-        break;
-      case ('false'):
-        if (!result[0]) {
-          return res.status(200).send({
-            status: 'error',
-            messayge: 'No uncompleted todoes'
-          });
-        }
-        res.status(200).send({
-          status: 'success',
-          unfinishedtodoes: result
-        });
-        break;
-      default:
-        break;
+    if (!result[0]) {
+      return res.status(200).send({
+        status: 'error',
+        messayge: 'No completed todoes'
+      });
     }
-    return;
+    return res.status(200).send({
+      status: 'success',
+      completedtodoes: result
+    });
   }
+  return next();
+};
+const getAllUncompleted = async (req, res, next) => {
+  if (!req.query.completed) {
+    return next();
+  }
+  const result = await query(statusQuery(req.query.completed));
+  if (!result[0]) {
+    return res.status(200).send({
+      status: 'error',
+      messayge: 'No uncompleted todoes'
+    });
+  }
+  console.log('execution got here')
+  res.status(200).send({
+    status: 'success',
+    unfinishedtodoes: result
+  });
+};
+const getAll = async (req, res) => {
   try {
     const result = await query(getAllQuery());
     if (!result[0]) {
@@ -121,6 +122,7 @@ const getItem = async (req, res) => {
 const checkItem = async (req, res) => {
   try {
     const result = await query(checkItemQuery(req.params.item));
+    console.log(result);
     if (!result[0]) {
       return res.status(404).send({
         status: 'error',
@@ -166,5 +168,7 @@ export {
   checkItem,
   getItem,
   removeItem,
-  getAll
+  getAll,
+  getAllCompleted,
+  getAllUncompleted
 };

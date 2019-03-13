@@ -4,7 +4,9 @@ import {
   checkItem,
   getItem,
   getAll,
-  removeItem
+  removeItem,
+  getAllCompleted,
+  getAllUncompleted
 } from './models/operations';
 
 const app = express();
@@ -13,7 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.post('/todos', addItem);
-app.get('/todos', getAll);
+app.get('/todos', getAllCompleted, getAllUncompleted, getAll);
 app.get('/todos/:item', getItem);
 app.delete('/todos/:item', removeItem);
 app.patch('/todos/:item', checkItem);
