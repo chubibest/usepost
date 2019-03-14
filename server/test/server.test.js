@@ -11,21 +11,19 @@ chai.use(chaiHttp);
 describe('Post todos/', () => {
   before(async () => {
     const text = 'gadot';
-    try {
-      await query(queries.removeItemQuery(text));
-    } catch (e) {
-      throw new Error();
-    }
+    await query(queries.removeItemQuery(text));
   });
+
+
   it('should create a new todo', async () => {
     const text = 'gadot';
     const resp = await chai.request(app)
       .post('/todos')
       .send({ text });
-      // console.log(resp)
     expect(resp).to.have.status(201);
     expect(resp.body.result[0].item).to.equal(text);
   });
+
   it('should return a 400 when nothing  is sent', async () => {
     const nothing = 'null';
     const resp = await chai.request(app)
@@ -34,6 +32,7 @@ describe('Post todos/', () => {
     expect(resp).to.have.status(400);
     expect(resp.text).to.equal('{"status":"bad request","message":"please send correct input"}');
   });
+
   it('should return a 403 when bad data is sent', async () => {
     const text = ' ';
     const resp = await chai.request(app)
@@ -44,21 +43,52 @@ describe('Post todos/', () => {
       expect(resp.error.text).to.equal('{"status":"Forbidden!","message":"please send correct input"}');
     }
   });
+
   it('should trigger an error when data is inputed twice', async () => {
     const text = 'gadot';
     const resp = await chai.request(app)
       .post('/todos')
       .send({ text });
-    console.log(resp.status);
     expect(resp.status).to.equal(409);
     expect(resp.error.text).to.equal('{"status":"error","message":"item already exist"}');
   });
 });
+
 describe('GETALL TODOS', () => {
   it('should get all todos', async () => {
     const resp = await chai.request(app)
       .get('/todos');
     expect(resp).to.have.status(200);
+  });
+});
+
+describe('GET COMPLETED TODOS', () => {
+  it('should return completed todos', async () => {
+    const resp = await chai.request(app)
+      .get('/todos?completed=true');
+    expect(resp.status).to.equal(200);
+    if (JSON.parse(resp.text).status === 'error') {
+      expect(JSON.parse(resp.text).status).to.equal('error');
+      return;
+    }
+    if (JSON.parse(resp.text).status === 'success') {
+      expect(JSON.parse(resp.text).status).to.equal('success');
+    }
+  });
+});
+
+describe('GET UNCOMPLETED TODOS', () => {
+  it('should return uncompleted todos', async () => {
+    const resp = await chai.request(app)
+      .get('/todos?completed=false');
+    expect(resp.status).to.equal(200);
+    if (JSON.parse(resp.text).status === 'error') {
+      expect(JSON.parse(resp.text).status).to.equal('error');
+      return;
+    }
+    if (JSON.parse(resp.text).status === 'success') {
+      expect(JSON.parse(resp.text).status).to.equal('success');
+    }
   });
 });
 describe('GET TODO', () => {
@@ -80,7 +110,7 @@ describe('UPDATE ITEM', () => {
     const resp = await chai.request(app)
       .patch('/todos/crap');
     expect(resp.status).to.equal(404);
-    expect(resp.text).to.equal('{"status":"error","message":"Item not found"}')
+    expect(resp.text).to.equal('{"status":"error","message":"Item not found"}');
   });
 });
 describe('DELETE TODOS', () => {

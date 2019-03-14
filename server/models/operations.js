@@ -67,7 +67,6 @@ const getAllUncompleted = async (req, res, next) => {
       messayge: 'No uncompleted todoes'
     });
   }
-  console.log('execution got here')
   res.status(200).send({
     status: 'success',
     unfinishedtodoes: result
@@ -122,7 +121,6 @@ const getItem = async (req, res) => {
 const checkItem = async (req, res) => {
   try {
     const result = await query(checkItemQuery(req.params.item));
-    console.log(result);
     if (!result[0]) {
       return res.status(404).send({
         status: 'error',
