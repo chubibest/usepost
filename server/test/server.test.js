@@ -55,10 +55,13 @@ describe('Post todos/', () => {
 });
 
 describe('GETALL TODOS', () => {
-  it('should get all todos', async () => {
+  it('should get all todos or return an error message when there are no todoes', async () => {
     const resp = await chai.request(app)
       .get('/todos');
     expect(resp).to.have.status(200);
+    if (JSON.parse(resp.text).status === 'error') {
+      expect(JSON.parse(resp.text).status).to.equal('error');
+    }
   });
 });
 
@@ -98,6 +101,12 @@ describe('GET TODO', () => {
     expect(resp.text).to.equal('{"status":"error","message":"Item not found","sender":"getItem"}');
     expect(resp).to.have.status(404);
   });
+  it('should get a todo', async () => {
+    const resp = await chai.request(app)
+      .get('/todos/gadot');
+    expect(JSON.parse(resp.text).yay).to.equal('yay');
+    expect(resp).to.have.status(200);
+  });
 });
 describe('UPDATE ITEM', () => {
   it('should update ', async () => {
@@ -110,7 +119,7 @@ describe('UPDATE ITEM', () => {
     const resp = await chai.request(app)
       .patch('/todos/crap');
     expect(resp.status).to.equal(404);
-    expect(resp.text).to.equal('{"status":"error","message":"Item not found"}');
+    expect((resp.text)).to.equal('{"status":"error","message":"Item not found"}');
   });
 });
 describe('DELETE TODOS', () => {

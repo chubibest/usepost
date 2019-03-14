@@ -113,7 +113,6 @@ const getItem = async (req, res) => {
       status: 'error',
       message: 'could not fetch item'
     });
-    return e;
   }
 };
 
