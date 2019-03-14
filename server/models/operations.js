@@ -28,15 +28,9 @@ const addItem = async (req, res) => {
       result
     });
   } catch (e) {
-    if (e.name === 'error') {
-      return res.status(409).send({
-        status: 'error',
-        message: 'item already exist'
-      });
-    }
-    res.status(500).send({
+    return res.status(409).send({
       status: 'error',
-      message: 'server error'
+      message: 'item already exist'
     });
   }
 };
