@@ -9,6 +9,7 @@ import {
 } from '../db/utils';
 
 const addItem = async (req, res) => {
+  console.log('DID THIS LOG?', req.body.text);
   if (!req.body.text) {
     return res.status(400).send({
       status: 'bad request',

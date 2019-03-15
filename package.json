@@ -9,7 +9,7 @@
     "start": "node dist/server.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "report": "nyc report --reporter=lcov",
-    "test": "npm run create_table && nyc mocha --require @babel/register server/**/*.test.js --exit",
+    "test": "export NODE_ENV=test && npm run refresh_table && nyc mocha --require @babel/register server/**/*.test.js --exit",
     "test-dev": "nyc mocha --require @babel/register server/**/*.test.js --exit",
     "test-watch": "nodemon -x 'npm test'",
     "start-dev": "nodemon -x 'babel-node server/server.js'",

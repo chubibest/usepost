@@ -1,12 +1,22 @@
 import { Pool } from 'pg';
 import * as dotenv from 'dotenv';
 
+const env = process.env.NODE_ENV || 'development';
 dotenv.config();
-const pool = new Pool(
-  {
-    connectionString: process.env.DATABASE_URL
-  }
-);
+let pool;
+const databaseConnect = (connectionString) => {
+  pool = new Pool(
+    {
+      connectionString
+    }
+  );
+};
+if (env === 'development' || env === 'production') databaseConnect(process.env.DATABASE_URL);
+
+
+if (env === 'test') databaseConnect(process.env.TEST_DATABASE_URL);
+
+
 const query = async (queryObj) => {
   let client;
   try {

@@ -7,7 +7,6 @@ import * as queries from '../db/utils';
 
 chai.use(chaiHttp);
 
-
 describe('Post todos/', () => {
   before(async () => {
     const text = 'gadot';
@@ -54,46 +53,6 @@ describe('Post todos/', () => {
   });
 });
 
-describe('GETALL TODOS', () => {
-  it('should get all todos or return an error message when there are no todoes', async () => {
-    const resp = await chai.request(app)
-      .get('/todos');
-    expect(resp).to.have.status(200);
-    if (JSON.parse(resp.text).status === 'error') {
-      expect(JSON.parse(resp.text).status).to.equal('error');
-    }
-  });
-});
-
-describe('GET COMPLETED TODOS', () => {
-  it('should return completed todos', async () => {
-    const resp = await chai.request(app)
-      .get('/todos?completed=true');
-    expect(resp.status).to.equal(200);
-    if (JSON.parse(resp.text).status === 'error') {
-      expect(JSON.parse(resp.text).status).to.equal('error');
-      return;
-    }
-    if (JSON.parse(resp.text).status === 'success') {
-      expect(JSON.parse(resp.text).status).to.equal('success');
-    }
-  });
-});
-
-describe('GET UNCOMPLETED TODOS', () => {
-  it('should return uncompleted todos', async () => {
-    const resp = await chai.request(app)
-      .get('/todos?completed=false');
-    expect(resp.status).to.equal(200);
-    if (JSON.parse(resp.text).status === 'error') {
-      expect(JSON.parse(resp.text).status).to.equal('error');
-      return;
-    }
-    if (JSON.parse(resp.text).status === 'success') {
-      expect(JSON.parse(resp.text).status).to.equal('success');
-    }
-  });
-});
 describe('GET TODO', () => {
   it('should return a 404 for bad input', async () => {
     const resp = await chai.request(app)
@@ -140,5 +99,58 @@ describe('DELETE TODOS', () => {
       .delete('/todos/gadot');
     expect(resp.status).to.equal(404);
     expect(resp.text).to.equal('{"status":"error","error":"item not found"}');
+  });
+});
+
+describe('GET COMPLETED TODOS', () => {
+  it('should return an error if there are no completed todoes', async () => {
+    const resp = await chai.request(app)
+      .get('/todos?completed=true');
+    expect(resp.status).to.equal(200);
+    expect(JSON.parse(resp.text).status).to.equal('error');
+    await query({
+      text: 'INSERT INTO TODOES (item, completed) values($1, $2)',
+      values: ['sth', true]
+    });
+  });
+  it('should return completed todos', async () => {
+    const resp = await chai.request(app)
+      .get('/todos?completed=true');
+    expect(resp.status).to.equal(200);
+    expect(JSON.parse(resp.text).status).to.equal('success');
+  });
+});
+
+describe('GET UNCOMPLETED TODOS', () => {
+  it('should return an error if there are no uncompleted todoes', async () => {
+    const resp = await chai.request(app)
+      .get('/todos?completed=false');
+    expect(resp.status).to.equal(200);
+    expect(JSON.parse(resp.text).status).to.equal('error');
+    await query({
+      text: 'INSERT INTO TODOES (item) values($1)',
+      values: ['sh']
+    });
+  });
+  it('should return uncompleted todos', async () => {
+    const resp = await chai.request(app)
+      .get('/todos?completed=false');
+    expect(resp.status).to.equal(200);
+    expect(JSON.parse(resp.text).status).to.equal('success');
+  });
+});
+
+describe('GETALL TODOS', () => {
+  it('should get all todos or return an error message when there are no todoes', async () => {
+    const resp = await chai.request(app)
+      .get('/todos');
+    expect(resp).to.have.status(200);
+    await query('DELETE FROM todoes');
+  });
+  it('should return an error when there are no todoes', async () => {
+    const resp = await chai.request(app)
+      .get('/todos');
+    expect(resp).to.have.status(200);
+    expect(JSON.parse(resp.text).status).to.equal('error');
   });
 });
