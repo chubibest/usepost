@@ -3,5 +3,5 @@ set node version in engines object of package.json;
 
 how would i run the npm create-table script from heroku
 
-
-
+BEGIN INSERT INTO users (email, password) values('fhj', 'gvhb') returning owner_id as $5;
+      INSERT INTO todoes (item, completed) values($1, $2) where owner_id = $5 COMMIT

@@ -9,7 +9,6 @@ import {
 } from '../db/utils';
 
 const addItem = async (req, res) => {
-  console.log('DID THIS LOG?', req.body.text);
   if (!req.body.text) {
     return res.status(400).send({
       status: 'bad request',
@@ -23,7 +22,7 @@ const addItem = async (req, res) => {
     });
   }
   try {
-    const result = await query(addItemQuery(req.body.text));
+    const result = await query(addItemQuery(req.body.text, req.user.id));
     return res.status(201).send({
       status: 'success',
       result
@@ -37,7 +36,7 @@ const addItem = async (req, res) => {
 };
 const getAllCompleted = async (req, res, next) => {
   if (req.query.completed === 'true') {
-    const result = await query(statusQuery(req.query.completed));
+    const result = await query(statusQuery(req.query.completed, req.user.id));
     if (!result[0]) {
       return res.status(200).send({
         status: 'error',
@@ -55,7 +54,7 @@ const getAllUncompleted = async (req, res, next) => {
   if (!req.query.completed) {
     return next();
   }
-  const result = await query(statusQuery(req.query.completed));
+  const result = await query(statusQuery(req.query.completed, req.user.id));
   if (!result[0]) {
     return res.status(200).send({
       status: 'error',
@@ -69,7 +68,7 @@ const getAllUncompleted = async (req, res, next) => {
 };
 const getAll = async (req, res) => {
   try {
-    const result = await query(getAllQuery());
+    const result = await query(getAllQuery(req.user.id));
     if (!result[0]) {
       return res.status(200).send({
         status: 'error',
@@ -90,7 +89,7 @@ const getAll = async (req, res) => {
 };
 const getItem = async (req, res) => {
   try {
-    const result = await query(getItemQuery(req.params.item));
+    const result = await query(getItemQuery(req.params.item, req.user.id));
     if (result[0] === undefined) {
       return res.status(404).send({
         status: 'error',
@@ -114,7 +113,7 @@ const getItem = async (req, res) => {
 
 const checkItem = async (req, res) => {
   try {
-    const result = await query(checkItemQuery(req.params.item));
+    const result = await query(checkItemQuery(req.params.item, req.user.id));
     if (!result[0]) {
       return res.status(404).send({
         status: 'error',
@@ -136,7 +135,7 @@ const checkItem = async (req, res) => {
 const removeItem = async (req, res) => {
   const parameter = req.params.item;
   try {
-    const result = await query(removeItemQuery(parameter));
+    const result = await query(removeItemQuery(parameter, req.user.id));
     if (!result[0]) {
       return res.status(404).send({
         status: 'error',

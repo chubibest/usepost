@@ -13,9 +13,9 @@
     "test-dev": "nyc mocha --require @babel/register server/**/*.test.js --exit",
     "test-watch": "nodemon -x 'npm test'",
     "start-dev": "nodemon -x 'babel-node server/server.js'",
-    "create_table": "babel-node  createTable createUserTable",
-    "drop_table": "babel-node createTable dropUserTable",
-    "refresh_table": "npm run drop_table && npm run create_table "
+    "create_tables": "babel-node  manageTables createTables",
+    "drop_tables": "babel-node manageTables dropTables",
+    "refresh_table": "npm run drop_tables && npm run create_tables "
   },
   "engines": {
     "node": "8.11.4",
@@ -25,11 +25,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^3.0.4",
     "body-parser": "^1.18.3",
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
+    "jsonwebtoken": "^8.5.0",
     "make-runnable": "^1.3.6",
-    "pg": "^7.8.0"
+    "pg": "^7.8.0",
+    "validator": "^10.11.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
