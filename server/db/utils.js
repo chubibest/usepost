@@ -18,9 +18,11 @@ export const removeItemQuery = (item, userId) => ({
   text: 'DELETE FROM todoes WHERE item = $1 and owner_id = $2 returning * ',
   values: [item, userId]
 });
-export const statusQuery = (item, userId) => ({
-  text: 'SELECT * FROM todoes WHERE completed = $1 and owner_id = $2',
-  values: [item, userId]
+
+// changes here
+export const statusQuery = (item, userId, limit, offset) => ({
+  text: 'SELECT * FROM todoes WHERE completed = $1 and owner_id = $2 limit $3 offset $4',
+  values: [item, userId, limit, offset]
 });
 export const createUserQuery = (email, password) => ({
   text: 'INSERT INTO  users(email, password) values($1, $2) returning *',

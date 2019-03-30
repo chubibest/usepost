@@ -36,7 +36,10 @@ const addItem = async (req, res) => {
 };
 const getAllCompleted = async (req, res, next) => {
   if (req.query.completed === 'true') {
-    const result = await query(statusQuery(req.query.completed, req.user.id));
+    // changes here
+    const returnLimit = req.query.limit || null;
+    const offset = req.query.skip || null;
+    const result = await query(statusQuery(req.query.completed, req.user.id, returnLimit, offset));
     if (!result[0]) {
       return res.status(200).send({
         status: 'error',
@@ -54,7 +57,11 @@ const getAllUncompleted = async (req, res, next) => {
   if (!req.query.completed) {
     return next();
   }
-  const result = await query(statusQuery(req.query.completed, req.user.id));
+
+  // changes here
+  const returnLimit = req.query.limit || null;
+  const offset = req.query.skip || null;
+  const result = await query(statusQuery(req.query.completed, req.user.id, returnLimit, offset));
   if (!result[0]) {
     return res.status(200).send({
       status: 'error',
