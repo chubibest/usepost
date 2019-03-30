@@ -56,9 +56,9 @@ const loginUser = async (req, res) => {
       return res.status(400).send({ message: 'Incorrect Password' });
     }
     const token = generateToken(result[0].id);
-    return res.status(200).send({ token });
+    res.status(200).send({ token });
   } catch (e) {
-    return res.status(500).send({ e });
+    res.status(500).send({ e });
   }
 };
 
