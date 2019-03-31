@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="ie=edge" http-equiv="X-UA-Compatible">
+  <link href="./main.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Merienda:700|Podkova" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  <title>Do d DO</title> 
+</head>
+
+<body>
+  <header class="header opacity">
+    <h1>You Need Todo, To Do... d DO</h1>
+  </header>
+  <h3 class="title opacity" id = "purpose">Manage your time with this dumb app</h3>
+  <nav class="nav opacity">
+    <ul>
+      <li><button id ="login">Sign in</button></li>
+      <li><button id="join" type="button">Sign up</button></li>
+    </ul>
+  </nav>
+  <footer class="footer">
+    copyright 34934
+  </footer>
+  <div class="forms" id='signUpDiv'>
+     <span> <i class="fas fa-window-close" id = 'closeSignUp'></i></span>
+    <h2 class = 'form-header'>Kindly Fill To Create Account</h2>
+    <form>
+      <label for="email">Email</label>
+      <input id="email" name="email" placeholder="Enter Email" required=""type="email">
+
+      <label for="pass">Password</label> 
+      <input id="pass" name="password" placeholder="Enter Password"  type="password" required>
+
+      <label for="confirmPass">Confirm Password</label>
+      <input id="confirmPass" name="confirmPassword" placeholder="Re-enter Password"  type="password" required> 
+      <button class="submit" type="submit">Submit</button>
+    </form>
+  </div>
+  <div class="forms" id='loginDiv'>
+    <span>  <i class="fas fa-window-close" id = 'closeLogin'></i> </span>
+    <h2 class = 'form-header'>Enter Details To Login</h2>
+    <form>
+      <label for="email">Email</label>
+      <input id="email" name="email" placeholder="Enter Email" required=""type="email">
+
+      <label for="pass">Password</label> 
+      <input id="pass" name="password" placeholder="Enter Password"  type="password" required>
+      <button class="submit" type="submit">Submit</button>
+    </form>
+  </div>
+  <script src="./main.js" type="text/javascript"></script>
+</body>
+
+</html>

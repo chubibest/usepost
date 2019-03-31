@@ -13,8 +13,17 @@ import * as userMethods from './models/userOperations';
 const { verifyUser: verify } = userMethods;
 const app = express();
 
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// SERVE STATIC FILE HERE
+app.use('/', express.static(`${__dirname}/server/views/index.html`));
+
+// app.get('/', (req, res) => {
+//   res.send(__dirname + '/server/views/index');
+// });
+
 
 app.post('/login', userMethods.loginUser);
 app.post('/account', userMethods.createUser);
