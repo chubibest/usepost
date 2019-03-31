@@ -38,7 +38,6 @@ color: #554500;
  .header{
    grid-area:h;
    margin-top:30px;
-   font-size:;
    width:100%;
    text-align:center;
    font-family: "Merienda", cursive;
@@ -47,9 +46,7 @@ color: #554500;
  }
  .title{
    grid-area:t;
-   text-align:center;
-   place-self: start center;
-   
+   text-align:center;   
  }
  .nav{
    grid-area:n;
